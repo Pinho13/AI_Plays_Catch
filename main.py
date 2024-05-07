@@ -15,7 +15,7 @@ class Game:
         pygame.display.set_caption("Catch")
         self.clock = pygame.Clock()
         self.events = pygame.event.get()
-        self.reward = Reward()
+        self.reward = Reward(self)
         self.runner = []
         self.delta_time = 0
 
@@ -35,8 +35,9 @@ class Game:
         for runner in self.runner:
             if isinstance(runner, Squares):
                 runner.update()
+                if runner.should_delete:
+                    self.runner.remove(runner)
         pygame.display.update()
-
         pygame.display.set_caption("Catch - " + str(int(self.clock.get_fps())))
 
     def draw(self):
