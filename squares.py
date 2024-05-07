@@ -25,7 +25,7 @@ class Squares:
         self.num_of_weights = 0
         self.num_of_bias = 0
         self.vector = Vector2(0, 0)
-        self.catched = True
+        self.catched = False
         self.time_alive = 0
         self.should_delete = False
         self.initializer()
@@ -62,7 +62,8 @@ class Squares:
         self.rect.center = self.pos
         self.game.screen.blit(self.image, self.rect)
         self.get_vector()
-        self.NeuralNetwork()
+        if not self.catched:
+            self.NeuralNetwork()
 
     def up(self):
         if (self.pos.y + self.speed) > HEIGHT:
@@ -95,11 +96,8 @@ class Squares:
         self.inputs[0] = self.vector.x
         self.inputs[1] = self.vector.y
 
-        for output in range(len(self.outputs)):
-            self.outputs[output] = 0
-            for input in range(len(self.inputs)):
-                for i in range(self.num_of_weights):
-                    self.outputs[output] += self.inputs[input] * self.weights[i] + self.bias[output]
+        self.outputs[0] = self.inputs[0] * self.weights[0] + self.inputs[1] * self.weights[1] + self.bias[0]
+        self.outputs[1] = self.inputs[0] * self.weights[2] + self.inputs[1] * self.weights[3] + self.bias[1]
 
         if self.outputs[0] > 0.5:
             self.right()
@@ -111,12 +109,13 @@ class Squares:
         elif self.outputs[1] < -0.5:
             self.down()
 
-        if self.vector.length() <= REWARD_SIZE+CELL_SIZE:
+        if self.vector.length() <= 2:
             #self.reward += 5
             self.time_alive = 0
+            self.catched = True
             #self.game.reward.new_pos()
-        if self.time_alive > 10:
-            self.off_screen()
+        #if self.time_alive > 10:
+        #    self.off_screen()
 
     def get_vector(self):
         self.vector = Vector2(self.game.reward.pos - self.pos)
@@ -134,6 +133,12 @@ class Reward:
         if self.time_alive > 5:
             self.new_pos()
             self.time_alive = 0
+            for runner in self.game.runner:
+                if  isinstance(runner, Squares):
+                    if runner.catched:
+                        runner.catched = False
+                    else:
+                        runner.should_delete = True
 
     def new_pos(self):
         self.pos = Vector2(random.randint(REWARD_SIZE, WIDTH - REWARD_SIZE), random.randint(REWARD_SIZE, HEIGHT - REWARD_SIZE))

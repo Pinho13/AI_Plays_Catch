@@ -18,7 +18,10 @@ class Game:
         self.reward = Reward(self)
         self.runner = []
         self.delta_time = 0
+        self.spawn()
 
+    def spawn(self):
+        self.reward.time_alive = 0
         for i in range(NUMBER_OF_SQUARES):
             self.runner.append(Squares(self, Vector2(SPAWN)))
 
@@ -37,6 +40,8 @@ class Game:
                 runner.update()
                 if runner.should_delete:
                     self.runner.remove(runner)
+        if len(self.runner) <= 0:
+            self.spawn()
         pygame.display.update()
         pygame.display.set_caption("Catch - " + str(int(self.clock.get_fps())))
 
