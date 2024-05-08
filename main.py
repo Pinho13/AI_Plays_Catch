@@ -18,9 +18,13 @@ class Game:
         self.reward = Reward(self)
         self.runner = []
         self.delta_time = 0
+        self.gen = 0
+        self.gen_text = Text(Vector2(200, 10), 50, "Gen - 1")
         self.spawn()
 
     def spawn(self):
+        self.gen += 1
+        self.gen_text.text = "Gen - " + str(self.gen)
         self.reward.time_alive = 0
         for i in range(NUMBER_OF_SQUARES):
             self.runner.append(Squares(self, Vector2(SPAWN)))
@@ -48,6 +52,7 @@ class Game:
     def draw(self):
         self.screen.fill(pygame.Color("white"))
         self.reward.draw(self.screen)
+        self.screen.blit(self.gen_text.image, self.gen_text.pos)
 
     def debug(self):
         print("Runner: y =" + str(self.runner.pos))
