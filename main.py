@@ -51,10 +51,25 @@ class Game:
 
     def debug(self):
         print("Runner: y =" + str(self.runner.pos))
+
     def run(self):
         while True:
             self.check_events()
             self.update()
+
+
+class Text(pygame.sprite.Sprite):
+    def __init__(self, pos, size, text):
+        super().__init__()
+
+        self.pos = pos
+        self.text = text
+        self.text_font = pygame.font.SysFont(None, int(size))# noqa
+        self.image = self.text_font.render(text , True, (0, 0, 0))
+        self.rect = self.image.get_rect(center=pos)
+
+    def update(self):
+        self.image = self.text_font.render(self.text, True, (0, 0, 0))
 
 
 if __name__ == "__main__":
