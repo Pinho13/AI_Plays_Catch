@@ -19,12 +19,13 @@ class Game:
         self.runner = []
         self.delta_time = 0
         self.gen = 0
-        self.gen_text = Text(Vector2(200, 10), 50, "Gen - 1")
+        self.gen_text = Text(Vector2(300, 10), 50, "Gen - 1")
         self.spawn()
 
     def spawn(self):
         self.gen += 1
         self.gen_text.text = "Gen - " + str(self.gen)
+        self.gen_text.update()
         self.reward.time_alive = 0
         for i in range(NUMBER_OF_SQUARES):
             self.runner.append(Squares(self, Vector2(SPAWN)))
@@ -70,7 +71,7 @@ class Text(pygame.sprite.Sprite):
         self.pos = pos
         self.text = text
         self.text_font = pygame.font.SysFont(None, int(size))# noqa
-        self.image = self.text_font.render(text , True, (0, 0, 0))
+        self.image = self.text_font.render(text, True, (0, 0, 0))
         self.rect = self.image.get_rect(center=pos)
 
     def update(self):

@@ -11,6 +11,8 @@ class Squares:
         self.game = game
         self.pos = pos
         self.speed = SPEED
+        self.tex = TEXTURES[random.randint(0, len(TEXTURES)-1)].convert_alpha()
+        self.tex = pygame.transform.scale(self.tex, (CELL_SIZE*2.5, CELL_SIZE*2.5))
         self.image = pygame.Surface(Vector2(CELL_SIZE, CELL_SIZE))
         self.image.fill(pygame.Color("blue"))
         self.rect = self.image.get_rect(center=self.pos)
@@ -60,7 +62,7 @@ class Squares:
     def update(self):
         self.time_alive += self.game.delta_time
         self.rect.center = self.pos
-        self.game.screen.blit(self.image, self.rect)
+        self.game.screen.blit(self.tex, self.rect)
         self.get_vector()
         if not self.catched:
             self.NeuralNetwork()
@@ -109,7 +111,7 @@ class Squares:
         elif self.outputs[1] < -0.5:
             self.down()
 
-        if self.vector.length() <= 2:
+        if self.vector.length() <= REWARD_SIZE:
             #self.reward += 5
             self.time_alive = 0
             self.catched = True
